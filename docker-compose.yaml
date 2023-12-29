@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mmseg:
+    build: ./docker/
+    stdin_open: true
+    tty: true
+    ipc: host
+    network_mode: host
+    security_opt:
+      - seccomp=unconfined
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: [gpu]
+            count: all
+    volumes:
+      - .:/home/
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    environment:
+      - DISPLAY=${DISPLAY}
+    container_name: mmseg
+    command: /bin/bash

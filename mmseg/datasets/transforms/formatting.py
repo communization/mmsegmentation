@@ -81,8 +81,11 @@ class PackSegInputs(BaseTransform):
                 warnings.warn('Please pay attention your ground truth '
                               'segmentation map, usually the segmentation '
                               'map is 2D, but got '
-                              f'{results["gt_seg_map"].shape}')
-                data = to_tensor(results['gt_seg_map'].astype(np.int64))
+                              f'{results["gt_seg_map"].shape} ,'
+                              f'So I Change to {results["gt_seg_map"].shape[0:-1]}')
+                gt_seg_map_2d = results['gt_seg_map'].mean(axis=2).astype(np.int64)
+                #data = to_tensor(results['gt_seg_map'].astype(np.int64))
+                data = to_tensor(gt_seg_map_2d[None, ...])
             gt_sem_seg_data = dict(data=data)
             data_sample.gt_sem_seg = PixelData(**gt_sem_seg_data)
 
